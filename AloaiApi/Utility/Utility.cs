@@ -1368,9 +1368,8 @@ namespace Aloai
                 string fileName = Path.GetFileName(filename);
 
                 string directoryName = AppDomain.CurrentDomain.BaseDirectory + path;
-                string ext = Path.GetExtension(filename);
 
-                fileName = System.IO.Path.Combine(directoryName, fileName) + ext;
+                fileName = System.IO.Path.Combine(directoryName, fileName);
 
                 //Check if directory exist
                 if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + path))
