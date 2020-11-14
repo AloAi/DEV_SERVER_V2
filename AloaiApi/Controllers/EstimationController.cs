@@ -59,7 +59,7 @@ namespace Aloai.Controllers
             {
                 return Ok(new Result
                 {
-                    Status = 404,
+                    Status = 200,
                     Message = string.Empty,
                     Data = null
                 });
@@ -128,7 +128,7 @@ namespace Aloai.Controllers
             {
                 return Ok(new Result
                 {
-                    Status = 404,
+                    Status = 200,
                     Message = string.Empty,
                     Data = null
                 });
@@ -541,150 +541,18 @@ namespace Aloai.Controllers
         [HttpGet("GetEstimation/{id}/{modeUser}")]
         public ActionResult GetEstimation([FromRoute] decimal id, [FromRoute] decimal modeUser)
         {
-            int mode = (int)Mode.Hirer;
-
             if (modeUser == (int)Mode.Hirer)
             {
-                mode = (int)Mode.Partner;
+                ActionResult result = GetEstimationByHirer(id);
+
+                return result;
             }
-
-            string query =
-                "    SELECT A.EXCHANGE_ID, A.EXCHANGE_DATE, A.STATUS AS EXCHANGE_STATUS, A.REQUEST_CONTENT, A.INTRODUCTION " +
-                "         , J.TITLE, J.HIRER_ID, J.COMPANY_ID AS HIRER_COMPANY_ID " +
-                //                "         , H.NAME AS HIRER_NAME, H.AVATAR AS HIRER_AVATAR, HI.SCORE AS HIRER_SCORE " +
-                //                "         , HI.POST_CNT, HI.CANCEL_CNT AS HIRER_CANCEL_CNT, M.NAME AS HIRER_TYPE_COLOR " +
-                "         , CASE WHEN H.ACCOUNT_TYPE = 1 OR J.COMPANY_ID IS NULL THEN  H.NAME ELSE CH.NAME END HIRER_NAME " +
-                "         , CASE WHEN H.ACCOUNT_TYPE = 1 OR J.COMPANY_ID IS NULL THEN  H.AVATAR ELSE CH.LOGO END HIRER_AVATAR " +
-                "         , CASE WHEN H.ACCOUNT_TYPE = 1 OR J.COMPANY_ID IS NULL THEN  HI.SCORE ELSE HC.SCORE END HIRER_SCORE " +
-                "         , CASE WHEN H.ACCOUNT_TYPE = 1 OR J.COMPANY_ID IS NULL THEN  HI.POST_CNT ELSE HC.POST_CNT END POST_CNT " +
-                "         , CASE WHEN H.ACCOUNT_TYPE = 1 OR J.COMPANY_ID IS NULL THEN  HI.CANCEL_CNT ELSE HC.CANCEL_CNT END HIRER_CANCEL_CNT " +
-                "         , CASE WHEN H.ACCOUNT_TYPE = 1 OR J.COMPANY_ID IS NULL THEN  M.NAME ELSE MC.NAME END HIRER_TYPE_COLOR " +
-
-                "         , A.WORKER_ID, A.COMPANY_ID AS WORKER_COMPANY_ID " +
-                //                "         , U.NAME AS WORKER_NAME, U.AVATAR AS WORKER_AVATAR, UI.SCORE AS WORKER_SCORE " +
-                //                "         , UI.RECEIVE_CNT, UI.CANCEL_CNT AS WORKER_CANCEL_CNT, N.NAME AS WORKER_TYPE_COLOR " +
-                "         , CASE WHEN U.ACCOUNT_TYPE = 1 OR A.COMPANY_ID IS NULL THEN  U.NAME ELSE CU.NAME END WORKER_NAME " +
-                "         , CASE WHEN U.ACCOUNT_TYPE = 1 OR A.COMPANY_ID IS NULL THEN  U.AVATAR ELSE CU.LOGO END WORKER_AVATAR " +
-                "         , CASE WHEN U.ACCOUNT_TYPE = 1 OR A.COMPANY_ID IS NULL THEN  UI.SCORE ELSE GC.SCORE END WORKER_SCORE " +
-                "         , CASE WHEN U.ACCOUNT_TYPE = 1 OR A.COMPANY_ID IS NULL THEN  UI.RECEIVE_CNT ELSE GC.RECEIVE_CNT END RECEIVE_CNT " +
-                "         , CASE WHEN U.ACCOUNT_TYPE = 1 OR A.COMPANY_ID IS NULL THEN  UI.CANCEL_CNT ELSE GC.CANCEL_CNT END WORKER_CANCEL_CNT " +
-                "         , CASE WHEN U.ACCOUNT_TYPE = 1 OR A.COMPANY_ID IS NULL THEN  N.NAME ELSE NC.NAME END WORKER_TYPE_COLOR " +
-                "         , U.MEMBER_TYPE AS WORKER_MEMBER_TYPE " +
-
-                "         , B.HISTORY_ID, B.STATUS AS HISTORY_STATUS, B.REG_MODE_USER, B.COMPLETE_DATE " +
-                "         , C.ESTIMATOR_USER_ID, C.EST_MODE_USER, C.SCORE, C.COMMENT, C.ESTIMATION_DATE " +
-                "         , D.EXCHANGE_ID AS EXCHANGE_ID_RECEIVE, D.ESTIMATOR_USER_ID AS ESTIMATOR_USER_ID_RECEIVE " +
-                "         , D.EST_MODE_USER AS EST_MODE_USER_RECEIVE, D.SCORE AS SCORE_RECEIVE, D.COMMENT AS COMMENT_RECEIVE " +
-                "         , D.ESTIMATION_DATE AS ESTIMATION_DATE_RECEIVE  " +
-                "      FROM D_EXCHANGE A   " +
-                " LEFT JOIN M_JOB J ON A.JOB_ID = J.JOB_ID " +
-                " LEFT JOIN M_USER H ON J.HIRER_ID = H.USER_ID " +
-                " LEFT JOIN M_HIRER_INFO HI ON H.USER_ID = HI.USER_ID " +
-                " LEFT JOIN M_NAME M ON H.MEMBER_TYPE = M.CD AND M.TYPE_NAME = '" + Constant.MEMBER_COLOR + "' " +
-                " LEFT JOIN M_USER U ON A.WORKER_ID = U.USER_ID " +
-                " LEFT JOIN M_WORKER_INFO UI ON U.USER_ID = UI.USER_ID " +
-                " LEFT JOIN M_NAME N ON U.MEMBER_TYPE = N.CD AND N.TYPE_NAME = '" + Constant.MEMBER_COLOR + "' " +
-                " LEFT JOIN D_HISTORY B ON A.EXCHANGE_ID = B.EXCHANGE_ID " +
-                " LEFT JOIN D_ESTIMATION C ON (A.EXCHANGE_ID = C.EXCHANGE_ID AND C.EST_MODE_USER = " + modeUser + ") " +
-                " LEFT JOIN D_ESTIMATION D ON (A.EXCHANGE_ID = D.EXCHANGE_ID AND D.EST_MODE_USER = " + mode + ")  " +
-
-                // Add COMPANY
-                " LEFT JOIN M_COMPANY CH ON H.COMPANY_ID = CH.COMPANY_ID " +
-                " LEFT JOIN M_COMPANY CU ON U.COMPANY_ID = CU.COMPANY_ID " +
-                " LEFT JOIN M_WORKER_INFO GC ON U.COMPANY_ID = GC.COMPANY_ID " +
-                " LEFT JOIN M_HIRER_INFO HC ON H.COMPANY_ID = HC.COMPANY_ID " +
-                " LEFT JOIN M_NAME MC ON CH.MEMBER_TYPE = MC.CD AND MC.TYPE_NAME = '" + Constant.MEMBER_COLOR + "' " +
-                " LEFT JOIN M_NAME NC ON CU.MEMBER_TYPE = NC.CD AND NC.TYPE_NAME = '" + Constant.MEMBER_COLOR + "' " +
-
-                "     WHERE A.EXCHANGE_ID = " + id + " ";
-
-            DataTable data = SqlHelper.FillData(query);
-
-            if (data.Rows.Count == 0)
+            else
             {
-                return Ok(new Result
-                {
-                    Status = 404,
-                    Message = string.Empty,
-                    Data = null
-                });
+                ActionResult result = GetEstimationByPartner(id);
+
+                return result;
             }
-
-            V_EstimationEntity result = new V_EstimationEntity();
-
-            // Exchange info.
-            result.exchangeId = data.Rows[0]["EXCHANGE_ID"] == null ? (decimal)data.Rows[0]["EXCHANGE_ID_RECEIVE"] : (decimal)data.Rows[0]["EXCHANGE_ID"];
-            result.exchangeDate = DateTime.Parse(data.Rows[0]["EXCHANGE_DATE"].ToString());
-            result.exchangeStatus = (decimal)data.Rows[0]["EXCHANGE_STATUS"];
-            result.title = data.Rows[0]["TITLE"].ToString();
-            result.requestContent = data.Rows[0]["REQUEST_CONTENT"].ToString();
-            result.introduction = data.Rows[0]["INTRODUCTION"].ToString();
-
-            // Hirer info.
-            result.hirerId = (decimal)data.Rows[0]["HIRER_ID"];
-            result.hirerName = data.Rows[0]["HIRER_NAME"] == null ? string.Empty : data.Rows[0]["HIRER_NAME"].ToString();
-            result.hirerAvatar = data.Rows[0]["HIRER_AVATAR"] == null ? string.Empty : data.Rows[0]["HIRER_AVATAR"].ToString();
-            result.hirerScore = (decimal)data.Rows[0]["HIRER_SCORE"];
-            result.hirerPostCnt = (decimal)data.Rows[0]["POST_CNT"];
-            result.hirerCancelCnt = (decimal)data.Rows[0]["HIRER_CANCEL_CNT"];
-            result.hirerMemberTypeColor = data.Rows[0]["HIRER_TYPE_COLOR"] == null ? string.Empty : data.Rows[0]["HIRER_TYPE_COLOR"].ToString();
-            result.hirerCompanyId = data.Rows[0]["HIRER_COMPANY_ID"] == DBNull.Value ? null : (decimal?)data.Rows[0]["HIRER_COMPANY_ID"];
-            //result.HirerCompleteCnt = Utility.CountJobComplete(_context, result.HirerId, Mode.Hirer, result.HirerCompanyId);
-
-            // Worker info.
-            result.workerId = (decimal)data.Rows[0]["WORKER_ID"];
-            result.workerName = data.Rows[0]["WORKER_NAME"] == null ? string.Empty : data.Rows[0]["WORKER_NAME"].ToString();
-            result.workerAvatar = data.Rows[0]["WORKER_AVATAR"] == null ? string.Empty : data.Rows[0]["WORKER_AVATAR"].ToString();
-            result.workerScore = (decimal)data.Rows[0]["WORKER_SCORE"];
-            result.workerReceiveCnt = (decimal)data.Rows[0]["RECEIVE_CNT"];
-            result.workerCancelCnt = (decimal)data.Rows[0]["WORKER_CANCEL_CNT"];
-            result.workerMemberTypeColor = data.Rows[0]["WORKER_TYPE_COLOR"] == null ? string.Empty : data.Rows[0]["WORKER_TYPE_COLOR"].ToString();
-            result.workerCompanyId = data.Rows[0]["WORKER_COMPANY_ID"] == DBNull.Value ? null : (decimal?)data.Rows[0]["WORKER_COMPANY_ID"];
-            result.workerMemberType = (decimal)data.Rows[0]["WORKER_MEMBER_TYPE"];
-            //result.WorkerCompleteCnt = Utility.CountJobComplete(_context, result.WorkerId, Mode.Worker, result.WorkerCompanyId);
-
-            // History info.
-            result.historyId = data.Rows[0]["HISTORY_ID"] == null ? null : (decimal?)data.Rows[0]["HISTORY_ID"];
-            result.historyStatus = data.Rows[0]["HISTORY_STATUS"] == null ? null : (decimal?)data.Rows[0]["HISTORY_STATUS"];
-            result.regModeUser = data.Rows[0]["REG_MODE_USER"] == null ? null : (decimal?)data.Rows[0]["REG_MODE_USER"];
-
-            if (!string.IsNullOrEmpty(data.Rows[0]["COMPLETE_DATE"].ToString()))
-            {
-                result.completeDate = DateTime.Parse(data.Rows[0]["COMPLETE_DATE"].ToString());
-            }
-
-            if (!string.IsNullOrEmpty(data.Rows[0]["ESTIMATION_DATE"].ToString()))
-            {
-                result.estimationDate = DateTime.Parse(data.Rows[0]["ESTIMATION_DATE"].ToString());
-            }
-
-            if (!string.IsNullOrEmpty(data.Rows[0]["SCORE"].ToString()))
-            {
-                result.isSended = true;
-                result.score = (decimal)data.Rows[0]["SCORE"];
-            }
-
-            result.comment = data.Rows[0]["COMMENT"] == null ? string.Empty : data.Rows[0]["COMMENT"].ToString();
-
-            if (!string.IsNullOrEmpty(data.Rows[0]["ESTIMATION_DATE_RECEIVE"].ToString()))
-            {
-                result.estimationDateReceive = DateTime.Parse(data.Rows[0]["ESTIMATION_DATE_RECEIVE"].ToString());
-            }
-
-            if (!string.IsNullOrEmpty(data.Rows[0]["SCORE_RECEIVE"].ToString()))
-            {
-                result.isReceived = true;
-                result.scoreReceive = (decimal)data.Rows[0]["SCORE_RECEIVE"];
-            }
-
-            result.commentReceive = string.IsNullOrEmpty(data.Rows[0]["COMMENT_RECEIVE"].ToString()) ? string.Empty : data.Rows[0]["COMMENT_RECEIVE"].ToString();
-
-            return Ok(new Result
-            {
-                Status = 200,
-                Message = string.Empty,
-                Data = result
-            });
         }
 
         /// <summary>
