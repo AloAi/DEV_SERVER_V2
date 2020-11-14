@@ -4,14 +4,6 @@
 // </copyright>
 //-------------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Linq;
-//-------------------------------------------------------------------------------------------
-// <copyright>
-//     Copyright (c) 2019 Aloai Company. All rights reserved.
-// </copyright>
-//-------------------------------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using System.Data;

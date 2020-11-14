@@ -13,15 +13,12 @@ using Nancy;
 using Nancy.Json;
 using NHibernate.Linq;
 
-namespace Aloai.Controllers
-{
+namespace Aloai.Controllers {
     [ApiController]
     [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
-    public class CommonController : ControllerBase
-    {
+    public class CommonController : ControllerBase {
         private readonly AloaiDataContext _context;
-        public CommonController(AloaiDataContext context)
-        {
+        public CommonController(AloaiDataContext context) {
             _context = context;
         }
 
@@ -29,8 +26,8 @@ namespace Aloai.Controllers
         /// Get request timeout value.
         /// </summary>
         /// <returns>Request timeout value</returns>
-        public decimal GetRequestTimeOut()
-        {
+        [HttpGet("GetRequestTimeOut")]
+        public decimal GetRequestTimeOut() {
             return decimal.Parse(Utility.GetDefineValue(Constant.REQUEST_TIME).value);
         }
 
@@ -38,8 +35,8 @@ namespace Aloai.Controllers
         /// Get limit area value.
         /// </summary>
         /// <returns>Limit area value</returns>
-        public decimal GetLimitArea()
-        {
+        [HttpGet("GetLimitArea")]
+        public decimal GetLimitArea() {
             return decimal.Parse(Utility.GetDefineValue(Constant.LIMIT_AREA).value);
         }
 
@@ -47,8 +44,8 @@ namespace Aloai.Controllers
         /// Get notify number maximum.
         /// </summary>
         /// <returns>Notify number maximum</returns>
-        public decimal GetNotifyNumMax()
-        {
+        [HttpGet("GetNotifyNumMax")]
+        public decimal GetNotifyNumMax() {
             return decimal.Parse(Utility.GetDefineValue(Constant.NOTIFY_NUMBER_MAX).value);
         }
 
@@ -56,8 +53,8 @@ namespace Aloai.Controllers
         /// Get comment number maximum.
         /// </summary>
         /// <returns>Comment number maximum</returns>
-        public decimal GetCommentNumMax()
-        {
+        [HttpGet("GetCommentNumMax")]
+        public decimal GetCommentNumMax() {
             return decimal.Parse(Utility.GetDefineValue(Constant.COMMENT_NUMBER_MAX).value);
         }
 
@@ -65,8 +62,8 @@ namespace Aloai.Controllers
         /// Get history detail number maximum.
         /// </summary>
         /// <returns>history detail number maximum</returns>
-        public decimal GetHistoryNumMax()
-        {
+        [HttpGet("GetHistoryNumMax")]
+        public decimal GetHistoryNumMax() {
             return decimal.Parse(Utility.GetDefineValue(Constant.COMMENT_NUMBER_MAX).value);
         }
 
@@ -75,14 +72,12 @@ namespace Aloai.Controllers
         /// </summary>
         /// <returns>List DefineEntity.</returns>
         [HttpGet("GetCommonList")]
-        public ActionResult GetCommonList()
-        {
+        public ActionResult GetCommonList() {
             List<M_DEFINE> emps = _context.M_DEFINES.ToList();
 
             List<DefineEntity> list = new List<DefineEntity>();
 
-            foreach (M_DEFINE denfine in emps)
-            {
+            foreach (M_DEFINE denfine in emps) {
                 DefineEntity entity = new DefineEntity();
 
                 entity.controlName = denfine.CONTROL_NAME;
@@ -92,11 +87,10 @@ namespace Aloai.Controllers
                 list.Add(entity);
             }
 
-            return Ok(new Result
-            {
+            return Ok(new Result {
                 Status = 200,
-                Message = string.Empty,
-                Data = list
+                    Message = string.Empty,
+                    Data = list
             });
         }
 
@@ -105,15 +99,13 @@ namespace Aloai.Controllers
         /// </summary>
         /// <returns>List DefineEntity.</returns>
         [HttpGet("GetCommonList/{language}")]
-        public ActionResult GetCommonList(string language)
-        {
+        public ActionResult GetCommonList(string language) {
             CommonEntity commonEntity = new CommonEntity();
             List<M_DEFINE> emps = _context.M_DEFINES.ToList();
 
             List<DefineEntity> list = new List<DefineEntity>();
 
-            foreach (M_DEFINE denfine in emps)
-            {
+            foreach (M_DEFINE denfine in emps) {
                 DefineEntity entity = new DefineEntity();
 
                 entity.controlName = denfine.CONTROL_NAME;
@@ -126,26 +118,22 @@ namespace Aloai.Controllers
             commonEntity.commonList = list;
 
             var query2 = from d in _context.M_UNITS
-                         where d.DELETE_FLG == 0
-                             && d.SHOW_FLG == (int)ShowFlg.Show
-                         orderby d.DISP_ORDER ascending
-                         select d;
+            where d.DELETE_FLG == 0 &&
+                d.SHOW_FLG == (int) ShowFlg.Show
+            orderby d.DISP_ORDER ascending
+            select d;
 
             List<M_UNIT> empsUnit = query2.ToList();
             List<UnitEntity> unitList = new List<UnitEntity>();
 
-            foreach (M_UNIT unit in empsUnit)
-            {
+            foreach (M_UNIT unit in empsUnit) {
                 UnitEntity unitEntity = new UnitEntity();
 
                 unitEntity.cd = unit.UNIT_CD;
 
-                if (string.IsNullOrEmpty(language) || language.Equals(Constant.LANGUAGE_VN))
-                {
+                if (string.IsNullOrEmpty(language) || language.Equals(Constant.LANGUAGE_VN)) {
                     unitEntity.name = unit.UNIT_NAME;
-                }
-                else
-                {
+                } else {
                     unitEntity.name = unit.UNIT_NAME_EN;
                 }
 
@@ -157,26 +145,22 @@ namespace Aloai.Controllers
             commonEntity.unitList = unitList;
 
             var query3 = from d in _context.M_CATALOGS
-                         where d.DELETE_FLG == Constant.USING_FLG
-                             && d.SHOW_FLG == (int)ShowFlg.Show
-                         orderby d.DISP_ORDER ascending
-                         select d;
+            where d.DELETE_FLG == Constant.USING_FLG &&
+                d.SHOW_FLG == (int) ShowFlg.Show
+            orderby d.DISP_ORDER ascending
+            select d;
 
             List<M_CATALOG> empsCatalog = query3.ToList();
             List<CatalogEntity> catalogList = new List<CatalogEntity>();
 
-            foreach (M_CATALOG catalog in empsCatalog)
-            {
+            foreach (M_CATALOG catalog in empsCatalog) {
                 CatalogEntity entity = new CatalogEntity();
 
                 entity.cd = catalog.CATALOG_CD;
 
-                if (string.IsNullOrEmpty(language) || language.Equals(Constant.LANGUAGE_VN))
-                {
+                if (string.IsNullOrEmpty(language) || language.Equals(Constant.LANGUAGE_VN)) {
                     entity.name = catalog.CATALOG_NAME;
-                }
-                else
-                {
+                } else {
                     entity.name = catalog.CATALOG_NAME_EN;
                 }
 
@@ -187,11 +171,10 @@ namespace Aloai.Controllers
 
             commonEntity.catalogList = catalogList;
 
-            return Ok(new Result
-            {
+            return Ok(new Result {
                 Status = 200,
-                Message = string.Empty,
-                Data = commonEntity
+                    Message = string.Empty,
+                    Data = commonEntity
             });
         }
     }

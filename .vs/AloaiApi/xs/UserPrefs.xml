@@ -1,0 +1,35 @@
+﻿<Properties StartupConfiguration="{5A5DB4AD-3DD6-41CC-A525-35349954F162}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="AloaiApi/Models/M_UNIT.cs">
+    <Files>
+      <File FileName="AloaiApi/Controllers/UnitController.cs" Line="21" Column="23" />
+      <File FileName="AloaiApi/Utility/Utility.cs" />
+      <File FileName="AloaiApi/Controllers/LoginController.cs" />
+      <File FileName="AloaiApi/Controllers/HirerController.cs" />
+      <File FileName="AloaiApi/Controllers/NotifyController.cs" />
+      <File FileName="AloaiApi/Controllers/QuestionController.cs" />
+      <File FileName="AloaiApi/Controllers/UserController.cs" />
+      <File FileName="AloaiApi/Controllers/PartnerController.cs" />
+      <File FileName="AloaiApi/Models/D_FAVOURITE.cs" />
+      <File FileName="AloaiApi/Models/M_IMAGE_DETAIL.cs" />
+      <File FileName="AloaiApi/Models/M_MESSAGE.cs" />
+      <File FileName="AloaiApi/Models/M_QUESTION.cs" />
+      <File FileName="AloaiApi/Models/M_UNIT.cs" Line="23" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="AloaiApi" expanded="True">
+            <Node name="AloaiApi" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.AloaiApi PreferredExecutionTarget="/Applications/Microsoft Edge.app" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

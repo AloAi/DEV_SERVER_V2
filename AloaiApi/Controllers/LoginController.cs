@@ -11,15 +11,13 @@ using Microsoft.Extensions.Logging;
 using Nancy;
 using Nancy.Json;
 
-namespace Aloai.Controllers
-{
+namespace Aloai.Controllers {
     [ApiController]
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
-    public class LoginController : ControllerBase
-    {
+    public class LoginController : ControllerBase {
         private readonly AloaiDataContext _context;
-        public LoginController(AloaiDataContext context)
-        {
+        public LoginController(AloaiDataContext context) {
             _context = context;
         }
 
@@ -27,9 +25,8 @@ namespace Aloai.Controllers
         /// GetLogin list.
         /// </summary>
         /// <returns>List LoginEntity</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet]
-        public ActionResult GetLoginList()
-        {
+        [Microsoft.AspNetCore.Mvc.HttpGet("GetLoginList")]
+        public ActionResult GetLoginList() {
             //PartTimeDataClassesDataContext db = new PartTimeDataClassesDataContext();
             //List<M_LOGIN> emps = db.M_LOGIN.ToList();
             List<LoginEntity> list = new List<LoginEntity>();
@@ -53,9 +50,8 @@ namespace Aloai.Controllers
         /// </summary>
         /// <param name="id">Login ID</param>
         /// <returns>LoginEntity</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet]
-        public ActionResult GetLogin(decimal id)
-        {
+        [Microsoft.AspNetCore.Mvc.HttpGet("GetLogin/{id}")]
+        public ActionResult GetLogin(decimal id) {
             //PartTimeDataClassesDataContext db = new PartTimeDataClassesDataContext();
             //M_LOGIN login = db.M_LOGIN.FirstOrDefault(x => x.USER_ID == id);
             LoginEntity entity = new LoginEntity();
@@ -75,9 +71,8 @@ namespace Aloai.Controllers
         /// </summary>
         /// <param name="id">Phone number</param>
         /// <returns>LoginEntity</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet]
-        public ActionResult GetLoginByPhone(string id)
-        {
+        [Microsoft.AspNetCore.Mvc.HttpGet("GetLoginByPhone/{id}")]
+        public ActionResult GetLoginByPhone(string id) {
             //PartTimeDataClassesDataContext db = new PartTimeDataClassesDataContext();
             //M_LOGIN login = db.M_LOGIN.FirstOrDefault(x => x.PHONE_NUMBER == id);
             LoginEntity entity = new LoginEntity();
@@ -97,9 +92,8 @@ namespace Aloai.Controllers
         /// </summary>
         /// <param name="id">Phone number</param>
         /// <returns>LoginEntity</returns>
-        [Microsoft.AspNetCore.Mvc.HttpGet]
-        public LoginEntity GetLoginByPhoneEntity(string id)
-        {
+        [Microsoft.AspNetCore.Mvc.HttpGet("GetLoginByPhoneEntity/{id}")]
+        public LoginEntity GetLoginByPhoneEntity(string id) {
             //PartTimeDataClassesDataContext db = new PartTimeDataClassesDataContext();
             //M_LOGIN login = db.M_LOGIN.FirstOrDefault(x => x.PHONE_NUMBER == id);
             LoginEntity entity = new LoginEntity();
@@ -119,13 +113,10 @@ namespace Aloai.Controllers
         /// </summary>
         /// <param name="loginEntity">LoginEntity</param>
         /// <returns>Success: 200; Fail: 400; Exists: 201</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost]
-        public ActionResult InsertLogin(LoginEntity loginEntity)
-        {
-            using (IDbContextTransaction trans = _context.Database.BeginTransaction())
-            {
-                try
-                {
+        [Microsoft.AspNetCore.Mvc.HttpPost("")]
+        public ActionResult InsertLogin(LoginEntity loginEntity) {
+            using(IDbContextTransaction trans = _context.Database.BeginTransaction()) {
+                try {
                     //if (Utility.CheckLoginExists(loginEntity))
                     //{
                     //    HttpError error = new HttpError("Phone number is exists!");
@@ -182,24 +173,20 @@ namespace Aloai.Controllers
                     trans.Commit();
                     HttpError errorHttp = new HttpError("Insert is success!");
 
-                    return Ok(new Result
-                    {
+                    return Ok(new Result {
                         Status = 200,
-                        Message = errorHttp.Message,
-                        Data = true
+                            Message = errorHttp.Message,
+                            Data = true
                     });
-                }
-                catch
-                {
+                } catch {
                     // Rollback transaction.
                     trans.Rollback();
                     HttpError error = new HttpError("Error system!");
 
-                    return Ok(new Result
-                    {
+                    return Ok(new Result {
                         Status = 404,
-                        Message = error.Message,
-                        Data = null
+                            Message = error.Message,
+                            Data = null
                     });
                 }
             }
@@ -210,9 +197,8 @@ namespace Aloai.Controllers
         /// </summary>
         /// <param name="loginEntity">LoginEntity</param>
         /// <returns>Login ok: UserEntity; Login fail: NotFound</returns>
-        [Microsoft.AspNetCore.Mvc.HttpPost]
-        public ActionResult CheckLogin(LoginEntity loginEntity)
-        {
+        [Microsoft.AspNetCore.Mvc.HttpPost("CheckLogin")]
+        public ActionResult CheckLogin(LoginEntity loginEntity) {
             //PartTimeDataClassesDataContext db = new PartTimeDataClassesDataContext();
 
             //if (!Utility.CheckLoginExists(loginEntity))
@@ -289,11 +275,10 @@ namespace Aloai.Controllers
             //    }
             //}
 
-            return Ok(new Result
-            {
+            return Ok(new Result {
                 Status = 404,
-                Message = "Not found.",
-                Data = null
+                    Message = "Not found.",
+                    Data = null
             });
         }
 
@@ -303,12 +288,9 @@ namespace Aloai.Controllers
         /// <param name="loginEntity">LoginEntity</param>
         /// <returns>Success: 200; Error: 400; Not exists: 201</returns>
         [Microsoft.AspNetCore.Mvc.HttpPost]
-        public ActionResult ChangePassword(LoginEntity loginEntity)
-        {
-            using (IDbContextTransaction trans = _context.Database.BeginTransaction())
-            {
-                try
-                {
+        public ActionResult ChangePassword(LoginEntity loginEntity) {
+            using(IDbContextTransaction trans = _context.Database.BeginTransaction()) {
+                try {
                     //if (!Utility.CheckLoginExists(loginEntity))
                     //{
                     //    HttpError error = new HttpError("Phone number is not exists!");
@@ -324,18 +306,15 @@ namespace Aloai.Controllers
 
                     HttpError errorHttp = new HttpError("Password is changed!");
                     return Ok(errorHttp);
-                }
-                catch
-                {
+                } catch {
                     // Rollback transaction.
                     trans.Rollback();
                     HttpError error = new HttpError("Error system!");
 
-                    return Ok(new Result
-                    {
+                    return Ok(new Result {
                         Status = 404,
-                        Message = error.Message,
-                        Data = null
+                            Message = error.Message,
+                            Data = null
                     });
                 }
             }
@@ -347,8 +326,7 @@ namespace Aloai.Controllers
         /// <param name="id">Login id</param>
         /// <returns>Success: true, Faile: false</returns>
         [Microsoft.AspNetCore.Mvc.HttpGet]
-        public bool DeleteLogin(string id)
-        {
+        public bool DeleteLogin(string id) {
             //PartTimeDataClassesDataContext db = new PartTimeDataClassesDataContext();
 
             //try
@@ -388,8 +366,7 @@ namespace Aloai.Controllers
         /// <param name="id">Phone number</param>
         /// <returns>Exists: True; Not exists: False</returns>
         [Microsoft.AspNetCore.Mvc.HttpGet]
-        public bool CheckLoginExists(string id)
-        {
+        public bool CheckLoginExists(string id) {
             return Utility.CheckLoginExists(id);
         }
     }
