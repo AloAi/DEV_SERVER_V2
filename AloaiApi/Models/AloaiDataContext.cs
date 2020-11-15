@@ -345,8 +345,8 @@ namespace Aloai.Models
 
                 entity.Property(e => e.MESSAGE_ID).HasColumnName("MESSAGE_ID").HasColumnType("DECIMAL").HasMaxLength(9);
                 entity.Property(e => e.MESSAGE_CD).HasColumnName("MESSAGE_CD").HasColumnType("DECIMAL").HasMaxLength(3);
-                entity.Property(e => e.LANGUAGE_TYPE).HasColumnName("MESSAGE_CONTENT").HasColumnType("NVARCHAR(5)").HasMaxLength(5);
-                entity.Property(e => e.MESSAGE_CONTENT).HasColumnName("LANGUAGE_TYPE").HasColumnType("NVARCHAR(300)").HasMaxLength(300);
+                entity.Property(e => e.LANGUAGE_TYPE).HasColumnName("LANGUAGE_TYPE").HasColumnType("NVARCHAR(5)").HasMaxLength(5);
+                entity.Property(e => e.MESSAGE_CONTENT).HasColumnName("MESSAGE_CONTENT").HasColumnType("NVARCHAR(300)").HasMaxLength(300);
                 entity.Property(e => e.REG_DATETIME).HasColumnName("REG_DATETIME").HasColumnType("DATETIME");
                 entity.Property(e => e.REG_USER_ID).HasColumnName("REG_USER_ID").HasColumnType("DECIMAL").HasMaxLength(9);
             });
@@ -364,9 +364,9 @@ namespace Aloai.Models
 
                 entity.Property(e => e.MESSAGE_ID).HasColumnName("MESSAGE_ID").HasColumnType("DECIMAL").HasMaxLength(9);
                 entity.Property(e => e.MESSAGE_CD).HasColumnName("MESSAGE_CD").HasColumnType("DECIMAL").HasMaxLength(9);
-                entity.Property(e => e.LANGUAGE_TYPE).HasColumnName("MESSAGE_CONTENT").HasColumnType("NVARCHAR(5)").HasMaxLength(5);
+                entity.Property(e => e.LANGUAGE_TYPE).HasColumnName("LANGUAGE_TYPE").HasColumnType("NVARCHAR(5)").HasMaxLength(5);
                 entity.Property(e => e.MESSAGE).HasColumnName("MESSAGE").HasColumnType("NVARCHAR(300)").HasMaxLength(300);
-                entity.Property(e => e.MESSAGE_CONTENT).HasColumnName("LANGUAGE_TYPE").HasColumnType("NVARCHAR(300)").HasMaxLength(300);
+                entity.Property(e => e.MESSAGE_CONTENT).HasColumnName("MESSAGE_CONTENT").HasColumnType("NVARCHAR(300)").HasMaxLength(300);
                 entity.Property(e => e.REG_DATETIME).HasColumnName("REG_DATETIME").HasColumnType("DATETIME");
                 entity.Property(e => e.REG_USER_ID).HasColumnName("REG_USER_ID").HasColumnType("DECIMAL").HasMaxLength(9);
             });
