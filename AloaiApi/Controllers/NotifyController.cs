@@ -385,6 +385,7 @@ namespace Aloai.Controllers
                 notify.READED_FLG = (int)ReadedFlg.Readed;
                 notify.UPD_DATETIME = Utility.GetSysDateTime();
 
+                _context.SaveChanges();
                 // Commit transaction.
                 tran.Commit();
 
@@ -452,6 +453,7 @@ namespace Aloai.Controllers
                     notify.UPD_DATETIME = Utility.GetSysDateTime();
                 }
 
+                _context.SaveChanges();
                 // Commit transaction.
                 tran.Commit();
 

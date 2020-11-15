@@ -66,7 +66,7 @@ namespace Aloai.Controllers
                 {
                     Status = 200,
                     Message = errorHttp.Message,
-                    Data = null
+                    Data = true
                 });
             }
             catch
@@ -79,7 +79,7 @@ namespace Aloai.Controllers
                 {
                     Status = 404,
                     Message = error.Message,
-                    Data = null
+                    Data = true
                 });
             }
         }
