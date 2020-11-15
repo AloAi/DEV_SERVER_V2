@@ -378,7 +378,7 @@ namespace Aloai
 
                 M_USER user = query.Single();
 
-                notify.CONTENT = user.NAME;
+                notify.CONTENT = string.IsNullOrEmpty(user.NAME) ? user.PHONE_NUMBER : user.NAME;
 
                 db.D_NOTIFYS.Add(notify);
                 db.SaveChanges();
